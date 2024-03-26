@@ -90,13 +90,14 @@ namespace Scraper.Domain.DomainServices
             var newFounds = new StringBuilder();
             foreach (var foundByRequest in foundsByRequest.Where(found => found.Value.Any()))
             {
-                if (!await _scrapeRecordService.AlreadRegisteredAsync(request.Id, request.UserId, request.Url, foundByRequest.Key ?? string.Empty))
-                {
-                    request.RegisterUrlsFounds(foundsByRequest);
-                    await _scrapeRepository.UpdateRequestAsync(request);
-                    await _scrapeRecordService.UpdateCacheAsync(request);
-                    newFounds.Append(string.Join(',', foundByRequest.Value));
-                }
+                if (await _scrapeRecordService.AlreadRegisteredAsync(request.Id, request.UserId, request.Url, foundByRequest.Key ?? string.Empty))
+                    continue;
+                
+                request.RegisterUrlsFounds(foundsByRequest);
+                await _scrapeRepository.UpdateRequestAsync(request);
+                await _scrapeRecordService.UpdateCacheAsync(request);
+                newFounds.Append(string.Join(',', foundByRequest.Value));
+
             }
 
             var newFoundsStr = newFounds.ToString();
