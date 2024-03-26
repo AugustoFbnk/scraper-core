@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      -  redis_data:/data
+    networks:
+      - scrapp-network
+  #scraper:
+  #  image: scraper
+  #  volumes:
+  #    - host/application_default_credentials.json:/container/application_default_credentials.json:ro
+  #  environment:
+  #    - DEFAULTCONNECTIONSTRING=
+  #    - FIREBASECREDENTIALFILE=
+  #    - FIREBASEPROJECTID=
+  #    - REDISHOST=
+  #    - REDISPORT=
+  #    - BROWSERPATH=
+  #  networks:
+  #    - scrapp-network
+  #  command: ./configureBkService.sh
+  #  stdin_open: true
+  #  tty: true
+  #  depends_on:
+  #    - redis
+volumes:
+  redis_data:
+  #scraper_data:
+  
+networks:
+  scrapp-network:
+    driver: bridge
+    
